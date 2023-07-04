@@ -3,6 +3,19 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+*.DS_Store
+
+*idea/
+*pycache__/
+*.vscode/
+
+# BlueJ files
+*.ctxt
+
+*target/
+*logs/
+*files/
+
 # C extensions
 *.so
 
