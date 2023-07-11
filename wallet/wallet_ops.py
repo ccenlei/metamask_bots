@@ -62,6 +62,7 @@ class WalletOperator:
         return self.driver
 
     def wallet_open(self, password: str) -> WebDriver:
+        print('start to open wallet.')
         # open metamask extension
         self.driver.get(
             'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html')
@@ -75,49 +76,46 @@ class WalletOperator:
             self.driver, '//button[@data-testid="unlock-submit"]')
         unlock_button.click()
         wait_page(
-            self.driver, '//img[@class="identicon"]')
+            self.driver, '//button[@data-testid="address-copy-button-text"]')
         return self.driver
 
     def wallet_network_change(self, network: str) -> WebDriver:
-        network_div = wrapper_find_element(
-            self.driver, '//div[@data-testid="network-display"]')
-        network_div.click()
-        lis_path = '//div[@class="network-dropdown-list"]/li[@class="dropdown-menu-item"]'
-        network_lis = wrapper_find_elements(self.driver, lis_path)
-        for network_li in network_lis:
-            network_span_text = network_li.text
-            if network == network_span_text:
-                network_li.click()
-                wait_path = '//span[@class="box box--margin-top-1 box--margin-bottom-1 box--flex-direction-row typography chip__label typography--h7 typography--weight-normal typography--style-normal typography--color-text-alternative" and contains(text(),"{}")]'.format(
-                    network)
-                wait_page(self.driver, wait_path)
-                return self.driver
-        # throw error
-        raise NoElementFoundException(
-            BotsError.ERROR_NO_NETWORK.value, network)
+        print('start to change network.')
+        network_button = wrapper_find_element(
+            self.driver, '//button[@data-testid="network-display"]')
+        network_button.click()
+        network_xpath = f'//div[@data-original-title="{network}"]'
+        print(network_xpath)
+        try:
+            network_div = wrapper_find_element(self.driver, network_xpath)
+            network_div.click()
+            time.sleep(1)
+            return self.driver
+        except Exception as err:
+            print('network error:', err)
+            raise NoElementFoundException(
+                BotsError.ERROR_NO_NETWORK.value, network)
 
     def wallet_account_change(self, account: str) -> WebDriver:
-        address_div = wrapper_find_element(
-            self.driver, '//div[@class="identicon"]')
-        address_div.click()
-        buttons = wrapper_find_elements(
-            self.driver, '//button[@data-testid="account-menu__account"]')
-        for button in buttons:
+        print('start to change account.')
+        address_span = wrapper_find_element(
+            self.driver, '//span[@class="box mm-text mm-text--body-md mm-text--font-weight-bold mm-text--ellipsis box--flex-direction-row box--color-text-default"]')
+        address_span.click()
+        spans = wrapper_find_elements(
+            self.driver, '//span[@class="box mm-text mm-text--inherit mm-text--ellipsis box--flex-direction-row box--color-text-default"]')
+        for span in spans:
             # if you want to directly get current element's subElement, you need a '.' before '//'
-            account_div = button.find_element(
-                By.XPATH, './/div[@class="account-menu__name"]')
-            account_text = account_div.text
+            account_text = span.text
             if account == account_text:
-                button.click()
-                wait_path = '//div[@class="selected-account__name" and contains(text(),"{}")]'.format(
-                    account)
-                wait_page(self.driver, wait_path)
+                span.click()
+                time.sleep(1)
                 return self.driver
         # throw error
         raise NoElementFoundException(
             BotsError.ERROR_NO_ACCOUNT.value, account)
 
     def wallet_confirm(self, pre_index: int) -> WebDriver:
+        print('start to confirm transaction.')
         # sometime metamask confirm-popup loads slowly, we should wait some seconds better.
         time.sleep(3)
         self.driver.switch_to.window(self.driver.window_handles[0])
@@ -137,6 +135,7 @@ class WalletOperator:
         return self.driver
 
     def wallet_enable(self, pre_index: int) -> WebDriver:
+        print('start to enable coins spends.')
         time.sleep(3)
         self.driver.switch_to.window(self.driver.window_handles[0])
         self.driver.get(
@@ -160,7 +159,8 @@ class WalletOperator:
         self.driver.switch_to.window(self.driver.window_handles[pre_index])
         return self.driver
 
-    def wallet_connent(self, pre_index: int) -> WebDriver:
+    def wallet_connect(self, pre_index: int) -> WebDriver:
+        print('start to connect website.')
         time.sleep(3)
         self.driver.switch_to.window(self.driver.window_handles[0])
         self.driver.get(
@@ -182,11 +182,12 @@ class WalletOperator:
         return self.driver
 
     def wallet_disconnect(self, pre_index: int, site: str) -> WebDriver:
+        print('start to disconnect website.')
         self.driver.switch_to.window(self.driver.window_handles[0])
         self.driver.get(
-            'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/popup.html')
+            'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html')
         option_ele = wrapper_find_element(
-            self.driver, '//button[@data-testid="account-options-menu-button"]')
+            self.driver, '//span[@class="box mm-icon mm-icon--size-sm box--display-inline-block box--flex-direction-row box--color-inherit"]')
         option_ele.click()
         connected_sites_ele = wrapper_find_element(
             self.driver, '//div[contains(text(),"已连接的网站")]')

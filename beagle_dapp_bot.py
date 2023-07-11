@@ -21,7 +21,7 @@ def swap_bot(op: WalletOperator, op_count=3) -> None:
     wallet_ele = wrapper_find_element(
         driver, '//div[contains(text(),"Metamask")]')
     lazy_click(wallet_ele)
-    op.wallet_connent(pre_index)
+    op.wallet_connect(pre_index)
     try:
         while op_count > 0:
             op_count -= 1
