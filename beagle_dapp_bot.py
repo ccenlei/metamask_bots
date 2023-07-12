@@ -27,7 +27,7 @@ def swap_bot(op: WalletOperator, op_count=3) -> None:
             op_count -= 1
             input_from_ele = wrapper_find_element(
                 driver, '//input[@class="token-amount-input _1cvvxtw5 _1cvvxtw8"]')
-            input_from_ele.send_keys('0.01')
+            input_from_ele.send_keys('0.012')
             swap_ele = wrapper_find_element(
                 driver, '//button[@id="swap-button"]')
             lazy_click(swap_ele)
@@ -64,6 +64,7 @@ def bot_all():
     driver = op.wallet_network_change('Base Goerli Testnet')
     driver.get('https://www.google.com/')
     swap_bot(op)
+    op.wallet_lock(pre_index)
     op.wallet_quit()
 
 

@@ -213,3 +213,18 @@ class WalletOperator:
         self.driver.get('https://www.google.com/')
         self.driver.switch_to.window(self.driver.window_handles[pre_index])
         return self.driver
+
+    def wallet_lock(self, pre_index: int) -> None:
+        print('start to lock wallet.')
+        self.driver.switch_to.window(self.driver.window_handles[0])
+        self.driver.get(
+            'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/home.html')
+        option_ele = wrapper_find_element(
+            self.driver, '//span[@class="box mm-icon mm-icon--size-sm box--display-inline-block box--flex-direction-row box--color-inherit"]')
+        option_ele.click()
+        lock_ele = wrapper_find_element(
+            self.driver, '//div[contains(text(),"Lock MetaMask")]')
+        lock_ele.click()
+        wait_page(self.driver, '//input[@id="password"]')
+        self.driver.get('https://www.google.com/')
+        self.driver.switch_to.window(self.driver.window_handles[pre_index])
