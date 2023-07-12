@@ -89,7 +89,7 @@ class WalletOperator:
         try:
             network_div = wrapper_find_element(self.driver, network_xpath)
             network_div.click()
-            time.sleep(1)
+            time.sleep(3)
             return self.driver
         except Exception as err:
             print('network error:', err)
@@ -108,7 +108,7 @@ class WalletOperator:
             account_text = span.text
             if account == account_text:
                 span.click()
-                time.sleep(1)
+                time.sleep(3)
                 return self.driver
         # throw error
         raise NoElementFoundException(
@@ -203,8 +203,8 @@ class WalletOperator:
                 button_ele = wrapper_find_element(
                     self.driver, '//button[contains(text(),"断开连接")]')
                 lazy_click(button_ele)
-                time.sleep(3)
                 break
+        time.sleep(3)
         '''
             for some unknown reason what caused such error:
                 Message: javascript error: LavaMoat - property "open" of globalThis is inaccessible under scuttling mode
