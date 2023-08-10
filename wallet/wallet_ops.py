@@ -84,12 +84,12 @@ class WalletOperator:
         network_button = wrapper_find_element(
             self.driver, '//button[@data-testid="network-display"]')
         network_button.click()
-        network_xpath = f'//div[@data-original-title="{network}"]'
+        network_xpath = f'//span[contains(text(),"{network}")]'
         print(network_xpath)
         try:
             network_div = wrapper_find_element(self.driver, network_xpath)
             network_div.click()
-            time.sleep(3)
+            time.sleep(1)
             return self.driver
         except Exception as err:
             print('network error:', err)
@@ -108,19 +108,27 @@ class WalletOperator:
             account_text = span.text
             if account == account_text:
                 span.click()
-                time.sleep(3)
+                time.sleep(1)
                 return self.driver
         # throw error
         raise NoElementFoundException(
             BotsError.ERROR_NO_ACCOUNT.value, account)
 
-    def wallet_confirm(self, pre_index: int) -> WebDriver:
+    def wallet_confirm(self, pre_index: int, gas_lowest=False) -> WebDriver:
         print('start to confirm transaction.')
         # sometime metamask confirm-popup loads slowly, we should wait some seconds better.
         time.sleep(3)
         self.driver.switch_to.window(self.driver.window_handles[0])
         self.driver.get(
             'chrome-extension://nkbihfbeogaeaoehlefnkodbefgpgknn/popup.html')
+        if gas_lowest:
+            gas_button = wrapper_find_element(
+                self.driver, '//button[@data-testid="edit-gas-fee-button"]')
+            gas_button.click()
+            gas_lowest_span = wrapper_find_element(
+                self.driver, '//span[@class="edit-gas-item__icon edit-gas-item__icon-low"]')
+            gas_lowest_span.click()
+            time.sleep(1)
         confirm_button_path = '//button[@class="button btn--rounded btn-primary page-container__footer-button"]'
         confirm_button = wrapper_find_element(self.driver, confirm_button_path)
         confirm_button.click()
@@ -134,7 +142,7 @@ class WalletOperator:
         self.driver.switch_to.window(self.driver.window_handles[pre_index])
         return self.driver
 
-    def wallet_enable(self, pre_index: int) -> WebDriver:
+    def wallet_enable(self, pre_index: int, gas_lowest=False) -> WebDriver:
         print('start to enable coins spends.')
         time.sleep(3)
         self.driver.switch_to.window(self.driver.window_handles[0])
@@ -146,6 +154,14 @@ class WalletOperator:
         next_ele = wrapper_find_element(
             self.driver, '//button[contains(text(),"下一步")]')
         next_ele.click()
+        if gas_lowest:
+            gas_button = wrapper_find_element(
+                self.driver, '//button[@data-testid="edit-gas-fee-button"]')
+            gas_button.click()
+            gas_lowest_span = wrapper_find_element(
+                self.driver, '//span[@class="edit-gas-item__icon edit-gas-item__icon-low"]')
+            gas_lowest_span.click()
+            time.sleep(1)
         enable_ele = wrapper_find_element(
             self.driver, '//button[contains(text(),"批准")]')
         enable_ele.click()
