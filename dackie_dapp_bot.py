@@ -20,17 +20,17 @@ def dackie_swap(op: WalletOperator):
     time.sleep(10)
     print("dackie swap.")
     swap_button_ele = wrapper_find_element(
-        driver, '//button[@id="swap-button"]')
+        driver, '//button[@id="swap-button"]', 20)
     swap_button_ele.click()
     confirm_button_ele = wrapper_find_element(
         driver, '//button[@id="confirm-swap-or-send"]')
     confirm_button_ele.click()
     op.wallet_confirm(pre_index, True)
-    time.sleep(10)
     close_button_ele = wrapper_find_element(
         driver, '//button[@class="sc-a09a241a-0 dIEdsM"]')
     close_button_ele.click()
     print("dackie change.")
+    time.sleep(10)
     button_change_ele = wrapper_find_element(
         driver, '//button[@class="sc-a09a241a-0 lcKOKl sc-e6c6e658-0 sc-ce351f2d-0 lbAREi ikmIEZ"]')
     button_change_ele.click()
