@@ -68,7 +68,7 @@ def bot_dackie():
     lazy_click(wallet_ele)
     op.wallet_connect(pre_index)
     try:
-        for number in range(1, 11):
+        for number in range(1, 10):
             print(number)
             bot_swap(op)
     except Exception as err:
